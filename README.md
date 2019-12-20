@@ -21,3 +21,14 @@ Wedding events, holiday parties, or most work events sometimes need a buffer. So
 - Swipe View
 - Hardcoded messenger
 - ProgessHUD
+
+## General Concept
+
+- Signup / Signin
+- Signup: enter introduction text
+- Signup: build and complete profile
+- Signup: filter preferences
+- Signin: move straight to search and swipe view
+- Signin: read profile, accept or reject
+- Signin: message prospect date
+- Signin: move to purchase page
