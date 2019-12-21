@@ -1,4 +1,4 @@
-# RentAdate
+# DateMate
 
 (Currently being built. Release date pending April 2020)
 
