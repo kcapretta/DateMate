@@ -1,0 +1,30 @@
+//
+//  ColoredLabel.swift
+//  RentAdate
+//
+//  Created by Kassandra Capretta on 1/5/20.
+//  Copyright © 2020 Kassandra Capretta. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+struct LabelTint {
+    static let RADTan = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+    static let whiteBackground = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+}
+
+class ColoredLabel {
+
+    static func styleLabel1(_ label:UILabel) {
+    
+    // Filled rounded corner style
+    label.backgroundColor = UIColor.init(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+    label.layer.cornerRadius = 20
+    label.layer.borderWidth = 1
+    label.layer.borderColor = UIColor.black.cgColor
+    label.tintColor = UIColor.white
+        
+    }
+
+}
