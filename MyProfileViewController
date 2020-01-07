@@ -17,19 +17,132 @@ import UIKit
    // Post as string
    //var postData = [String]()
 
-class MyProfileViewController: UIViewController {
+class MyProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    // Photos
+    @IBOutlet weak var profileViewMain: UIImageView!
+    @IBOutlet weak var profileView2: UIImageView!
+    @IBOutlet weak var profileView3: UIImageView!
+    @IBOutlet weak var profileView4: UIImageView!
+    
+    
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var firstNameLabel: UILabel!
     
     @IBOutlet weak var mainProfilePicture: UIImageView!
     
+    // let firebaseServer = FirebaseFunctions.shared
+    
+    // First Name Data
+    var firstName: String =  ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-       
+        ColoredLabel.styleLabel1(firstNameLabel)
+        //firstNameText.text = newUser.firstName
+        
+        // Photo Tapped Recognizer
+            [profileViewMain, profileView2, profileView3, profileView4].forEach {[weak self] (view) in
+                guard let view = view else { return}
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleImageViewTapped))
+                view.addGestureRecognizer(tapGesture)
+            }
+            pullUserImages()
+        
+    // Firebase Data
+        func pullUserImages() {
+            var index = 0
+            let imageViews = [profileViewMain,
+            profileView2, profileView3, profileView4]
+            
+//            if let uid = Auth.auth().currentUser?.uid {
+//                imageViews.forEach { (imageView) in
+//                    if let imageView = imageView {
+//                        let storage = Storage.storage()
+//                        let storageRef = storage.reference(withPath: "\(uid)/photos/\(index)")
+//                        PhotoUploader.downloadImageUrl(from: storageRef) { (url) in
+//                            guard let url = url else { return }
+//                            imageView.downloaded(from: url, contentMode: .scaleAspectFill)
+//                        }
+//                    }
+//                    index = index + 1
+//                }
+//            } else {
+//                showAlert(withTitle: "Error", message: "Not signed in")
+            }
+        }
+        
+        
+        // Photo Tapped Recognizer Pt 2
+        @objc func handleImageViewTapped(recognizer: UIGestureRecognizer) {
+            currentlySettingImageViewTag = recognizer.view?.tag
+            let picker = UIImagePickerController()
+            picker.delegate = self
+            picker.allowsEditing = true
+            
+            present(picker, animated: true, completion: nil)
+            
+        }
 
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+            print("Image... ", image)
+            
+            guard let tag  = currentlySettingImageViewTag else { return }
+            switch tag {
+            case 0:
+                profileViewMain.image = image
+                case 1:
+                profileView2.image = image
+                case 2:
+                profileView3.image = image
+                case 3:
+                profileView4.image = image
+            default:
+                profileViewMain.image = image
+            }
+            self.dismiss(animated: true, completion: nil)
+            }
+    
+    // Save the data
+    @IBAction func doneButtonTapped(_ sender: Any) {
+        let images = [profileViewMain.image,
+                          profileView2.image,
+                          profileView3.image,
+                          profileView4.image,
+            ]
+            
+            let filteredImages = images.filter { (image) -> Bool in
+                return image != nil
+            }
+            
+//            var index = 0
+//            filteredImages.forEach { (image) in
+//                if let uid = Auth.auth().currentUser?.uid, let image = image {
+//                    let storage = Storage.storage()
+//                    let storageRef = storage.reference(withPath: "\(uid)/photos/\(index)")
+//                    PhotoUploader.uploadImage(image, at: storageRef) {[weak self] (url) in
+//                        if url != nil {
+//                            print("url... ", url)
+//
+//                        } else {
+//                            self?.showAlert(withTitle: "Error", message: "Image Upload Failed")
+//                        }
+//                    }
+//                } else {
+//                    showAlert(withTitle: "Error", message: "No Image Selected")
+//                }
+//                index = index + 1
+            }
+            
+        }
+        
+        
     }
-
 }
+    
+    @IBAction func cancelTapped(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
