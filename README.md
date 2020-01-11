@@ -32,3 +32,27 @@ Wedding events, holiday parties, or most work events sometimes need a buffer. So
 - Signin: read profile, accept or reject
 - Signin: message prospect date
 - Signin: move to purchase page
+
+## Specifically What This App Does
+
+User can modify preferences:
+
+- Available for date
+— OR —
+- Requesting date
+
+Vital:
+	-height requirements
+	-date of event
+	-what will be needed (type of attire)
+	-will costs of date be taken care of (dinner, tickets, formal wear, etc.)
+  -select dates available
+  -type of events available for
+	-wedding
+	-family/friend parties
+	-holiday event
+	-work event
+	-formal/suit and tie
+  -available to date men, women, transgender, non-binary
+  -make profile invisible when not requesting a date but are available as a +1, ability to turn “on” as needed
+
