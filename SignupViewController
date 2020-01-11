@@ -29,5 +29,10 @@ class SignupViewController: UIViewController {
 
     }
     
-
+    @IBAction func signupTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let nextViewController = storyboard.instantiateViewController(identifier: "IntroductionTextViewController")
+        self.navigationController?.pushViewController(nextViewController, animated: true)
+    }
+    
 }
