@@ -43,17 +43,17 @@ OR...
 
 Vital:
 
-- height requirements
-- date of event
-	-what will be needed (type of attire)
-	-will costs of date be taken care of (dinner, tickets, formal wear, etc.)
-  	-select dates available
- 	 -type of events available for
-	-wedding
-	-family/friend parties
-	-holiday event
-	-work event
-	-formal/suit and tie
-  	-available to date men, women, transgender, non-binary
-  	-make profile invisible when not requesting a date but are available as a +1, ability to turn “on” as needed
+- Height requirements
+- Date of event
+- What will be needed (type of attire)
+- Will costs of date be taken care of? (dinner, tickets, formal wear, etc.)
+- Select dates available
+- Type of events available for
+- Wedding
+- Family/friend parties
+- Holiday event
+- Work event
+- Formal/suit and tie
+- Available to date men, women, transgender, non-binary
+- Make profile invisible when not requesting a date but are available as a +1, ability to turn “on” as needed
 
