@@ -1,0 +1,222 @@
+//
+//  CreateProfile1ViewController.swift
+//  RentAdate
+//
+//  Created by Kassandra Capretta on 12/19/19.
+//  Copyright © 2019 Kassandra Capretta. All rights reserved.
+//
+
+import UIKit
+// import Firebase
+// import FirebaseStorage
+
+class CreateProfile1ViewController: UIViewController {
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    @IBOutlet weak var genderTextField: UITextField!
+    
+    @IBOutlet weak var birthdayTextField: UITextField!
+    
+    @IBOutlet weak var jobTitleTextField: UITextField!
+    
+    @IBOutlet weak var schoolTextField: UITextField!
+    
+    @IBOutlet weak var ethnicityTextField: UITextField!
+    
+    let firebaseServer = FirebaseFunctions.shared
+    
+    // Date picker for birthday
+    private var datePicker: UIDatePicker?
+    
+    let genderPicker = UIPickerView()
+    let ethnicityPicker = UIPickerView()
+    
+    // Gender options
+    let gender = ["Woman",
+                "Man",
+                "Other",
+                "Agender",
+                "Androgyne",
+                "Androgynous",
+                "Bigender",
+                "Demiman",
+                "Demiwoman",
+                "Gender Fluid",
+                "Gender Neutral",
+                "Gender Nonconforming",
+                "Gender Questioning",
+                "Gender Variant",
+                "Genderqueer",
+                "Intersex",
+                "Intersex Man",
+                "Intersex Woman",
+                "Non-binary",
+                "Non-Gendered",
+                "Pangender",
+                "Polygender",
+                "Third Gender",
+                "Transgender",
+                "Transgender Man",
+                "Transgender Woman",
+                "Transitioning",
+                "Transsexual",
+                "Two-Spirit"
+    ]
+    
+    // Ethnicity Options
+    let ethnicity = ["American Indian", "African Descent", "East Asian", "Middle Eastern", "Hispanic", "Middle Eastern", "Pacific Islander", "South Asian", "Caucasian", "Other"]
+    
+    var selectedGender: String?
+    var selectedEthnicity: String?
+    
+    override func viewDidLoad() {
+    super.viewDidLoad()
+        
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
+        
+        createAllPickers()
+        createToolbar()
+        
+    }
+    
+    @IBAction func nextButtonTapped(_ sender: Any) {
+        guard var gender = genderTextField.text,
+            var birthday = birthdayTextField.text,
+            var jobTitle = jobTitleTextField.text,
+            var school = schoolTextField.text,
+            var ethnicity = ethnicityTextField.text
+        else {
+            print("Please fill in all fields")
+            return }
+        
+        gender = gender.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        ethnicity = ethnicity.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        
+        let genderInfo = UserInfo(type: "gender", value: Gender.valueFor(choice: gender), visible: true)
+        let jobTitleInfo = UserInfo(type: "jobTitle", value: JobTitle.valueFor(choice: jobTitle), visible: true)
+        let schoolInfo = UserInfo(type: "school", value: School.valueFor(choice: ))
+        let ethnicityInfo = UserInfo(type: "ethnicity", value: Ethnicity.valueFor(choice: ethnicity), visible: true)
+        let birthdayInfo = UserInfo(type: "birthday", value: birthday, visible: true)
+        
+        
+        
+        firebaseServer.saveCreateProfile1ViewController(genderInfo, jobTitleInfo, birthdayInfo, schoolInfo, ethnicityInfo) {[weak self] (error) in
+                   if error == nil {
+                       let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                       let pageOne = storyboard.instantiateViewController(identifier: "CreateProfile1ViewController")
+                       self?.navigationController?.pushViewController(pageOne, animated: true)
+                   } else {
+                       self?.showAlert(withTitle: "Error", message: error?.localizedDescription)
+
+        }
+    }
+        
+        func createAllPickers() {
+            genderPicker.delegate = self?
+            genderTextField.inputView = genderPicker
+            genderPicker.backgroundColor = .white
+            
+            ethnicityPicker.delegate = self?
+            ethnicityTextField.inputView = ethnicityPicker
+            ethnicityPicker.backgroundColor = .white
+        }
+        
+        // Date picker code
+        datePicker = UIDatePicker()
+        datePicker?.datePickerMode = .date
+        datePicker?.addTarget(self, action: #selector(informationViewController.dateChanged(datePicker:)), for: .valueChanged)
+    
+        datePicker?.backgroundColor = .white
+            // Birthday maximum
+            datePicker!.maximumDate = Calendar.current.date(byAdding: .year, value: -21, to: Date())
+            birthdayTextField.inputView = datePicker
+
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(informationViewController.viewTapped(gestureRecognizer:)))
+
+            view.addGestureRecognizer(tapGesture)
+        }
+    
+    // Toolbar for "Done" on Picker View
+       func createToolbar() {
+           let toolBar = UIToolbar()
+           toolBar.sizeToFit()
+           
+           let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(informationViewController.dismissKeyboard))
+           
+           toolBar.setItems([doneButton], animated: false)
+           toolBar.isUserInteractionEnabled = true
+        
+        genderTextField.inputAccessoryView = toolBar
+        birthdayTextField.inputAccessoryView = toolBar
+        ethnicityTextField.inputAccessoryView = toolBar
+    }
+    
+    @objc func dismissKeyboard() {
+           view.endEditing(true)
+       }
+    
+    @objc func viewTapped(gestureRecognizer: UITapGestureRecognizer) {
+    view.endEditing(true)
+    }
+    
+    // Date Picker for Birthday
+        @objc func dateChanged(datePicker: UIDatePicker) {
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MM/dd/yyyy"
+            
+            birthdayTextField.text = dateFormatter.string(from: datePicker.date)
+            
+            datePicker.backgroundColor = .white
+            inputText.font = UIFont(name: "Avenir", size: 15.0)
+        }
+    }
+
+// Extension on Picker
+extension CreateProfile1ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch pickerView {
+        case genderPicker: return gender.count
+        case ethnicityPicker: return ethnicity.count
+        default: return 0
+
+        }
+
+}
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    switch pickerView {
+    case genderPicker:
+        selectedGender = gender[row]
+        genderTextField.text = selectedGender
+        return gender[row]
+    case ethnicityPicker:
+        selectedEthnicity = ethnicity[row]
+        ethnicityTextField.text = selectedEthnicity
+        return ethnicity[row]
+        default: return ""
+            }
+        }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    switch pickerView {
+    case genderPicker:
+        selectedGender = gender[row]
+        genderTextField.text = selectedGender
+    case ethnicityPicker:
+        selectedEthnicity = ethnicity[row]
+        ethnicityTextField.text = selectedEthnicity
+    default: print("Nothing")
+        
+        }
+    }
+
+}
