@@ -1,0 +1,43 @@
+//
+//  LookingForDateViewController.swift
+//  RentAdate
+//
+//  Created by Kassandra Capretta on 1/13/20.
+//  Copyright © 2020 Kassandra Capretta. All rights reserved.
+//
+
+import UIKit
+import Firebase
+
+class LookingForDateViewController: UIViewController {
+
+    @IBOutlet weak var typeOfAttireTextField: UITextField!
+    
+    @IBOutlet weak var costsCoveredTextField: UITextField!
+    
+    @IBOutlet weak var typeOfEventTextField: UITextField!
+    
+    @IBOutlet weak var lookingForInDateTextField: UITextField!
+    
+    @IBOutlet weak var eventLocationTextField: UITextField!
+
+    
+    let firebaseServer = FirebaseFunctions.shared
+    
+    let typeOfAttire = ["Casual", "Semi-Formal", "Formal", "Professional", "Semi-Professional", "Anything", "Costume"]
+    
+    let typeOfEvent = ["Date", "Party", "Event", "Work Event", "Wedding", "Close Friend's Party", "Concert", "Funeral", "Unique Event", "Other"]
+    
+    let costsCovered = ["Yes", "No", "Somewhat"]
+    
+    let typeOfAttirePicker = UIPickerView
+    let typeOfEventPicker = UIPickerView
+    let costsCoveredPicker = UIPickerView
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+    
+    }
+    
+
+}
