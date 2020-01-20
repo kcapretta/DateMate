@@ -1,0 +1,250 @@
+//
+//  CreatProfile15ViewController.swift
+//  RentAdate
+//
+//  Created by Kassandra Capretta on 1/13/20.
+//  Copyright © 2020 Kassandra Capretta. All rights reserved.
+//
+
+import UIKit
+import Firebase
+import FirebaseStorage
+
+class CreatProfile15ViewController: UIViewController {
+
+    @IBOutlet weak var heightTextField: UITextField!
+    
+    @IBOutlet weak var educationTextField: UITextField!
+    
+    @IBOutlet weak var religionTextField: UITextField!
+    
+    @IBOutlet weak var politicalTextField: UITextField!
+    
+    @IBOutlet weak var drinkingTextField: UITextField!
+    
+    @IBOutlet weak var smokingTextField: UITextField!
+    
+    let firebaseServer = FirebaseFunctions.shared
+    
+    let religion = ["Atheist",
+    "Agnostic",
+    "Buddhist",
+    "Catholic",
+    "Christian",
+    "Hindu",
+    "Jewish",
+    "Muslim",
+    "Spiritual"]
+    
+    let heights = ["4'0 (122 cm)", "4'1 (125 cm)", "4'2 (128 cm)", "4'3 (130 cm)", "4'4 (133 cm)", "4'5 (135 cm)", "4'6 (138 cm)", "4'7 (140 cm)", "4'8 (143 cm)", "4'9 (145 cm)", "4'10 (148 cm)", "4'11 (150 cm)", "5'0 (153 cm)", "5'1 (155 cm)", "5'2 (158 cm)", "5'3 (161 cm)", "5'4 (163 cm)", "5'5 (166 cm)", "5'6 (168 cm)", "5'7 (171 cm)", "5'8 (173 cm)", "5'9 (176 cm)", "5'10 (178 cm)", "5'11 (181 cm)", "6'0 (183 cm)", "6'1 (186 cm)", "6'2 (189 cm)", "6'3 (191 cm)", "6'4 (194 cm)", "6'5 (196 cm)", "6'6 (199 cm)", "6'7 (201 cm)", "6'8 (204 cm)", "6'9 (206 cm)", "6'9 (209 cm)", "6'11 (211 cm)", "7'0 (214 cm)"]
+    
+    let education = ["High school",
+    "Bootcamp",
+    "Some College",
+    "Self Taught",
+    "Undergrad",
+    "Postgrad"]
+    
+    let politics = ["Liberal",
+    "Moderate",
+    "Democrat",
+    "Libertarian",
+    "Conservative"]
+    
+    let drinking = ["Yes", "No", "Sometimes"]
+    
+    let smoking = ["Yes", "No", "Sometimes"]
+    
+    let heightsPicker = UIPickerView()
+    let educationPicker = UIPickerView()
+    let religionPicker = UIPickerView()
+    let politicsPicker = UIPickerView()
+    let drinkPicker = UIPickerView()
+    let smokingPicker = UIPickerView()
+    
+    var selectedHeight: String?
+    var selectedEducation: String?
+    var selectedReligion: String?
+    var selectedPolitics: String?
+    var selectedDrinking: String?
+    var selectedSmoking: String?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+    
+    }
+    
+    @IBAction func nextButtonTapped(_ sender: Any) {
+        guard var education = educationTextField.text,
+        var politics = politicalTextField.text,
+        var drinking = drinkingTextField.text,
+        var religion = religionTextField.text,
+        var smoking = smokingTextField.text,
+        var height = heightTextField.text else {
+        print("Fill all fields...")
+        return }
+        
+        height = height.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        education = education.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        religion = religion.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        politics = politics.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        drinking = drinking.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        smoking = smoking.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "-", with: "").lowercased()
+        
+        let heightInfo = UserInfo(type: "height", value: height, visible: true)
+        let educationInfo = UserInfo(type: "education", value: EducationLevel.valueFor(choice: education), visible: true)
+        let politicsInfo = UserInfo(type: "politics", value: Politics.valueFor(choice: politics), visible: true)
+        let religionInfo = UserInfo(type: "religion", value: Religion.valueFor(choice: religion), visible: true)
+        let drinkInfo = UserInfo(type: "drink", value: Drink.valueFor(choice: drinking), visible: true)
+        let smokingInfo = UserInfo(type: "smoking", value: Smoking.valueFor(choice: smoking), visible: true)
+        
+        firebaseServer.saveCreateProfile15(heightInfo, educationInfo, politicsInfo, drinkInfo, smokingInfo) {[weak self] (error) in
+                
+                if error == nil {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let pageOne = storyboard.instantiateViewController(identifier: "CreateProfile15ViewController")
+                    self?.navigationController?.pushViewController(pageOne, animated: true)
+                }
+                print("Done but with error ...", error)
+            }
+        }
+    
+    
+func CreateAllPickers() {
+    
+    educationPicker.delegate = self
+    educationTextField.inputView = educationPicker
+    educationPicker.backgroundColor = .white
+    
+    heightsPicker.delegate = self
+    heightTextField.inputView = heightsPicker
+    heightsPicker.backgroundColor = .white
+    
+    religionPicker.delegate = self
+    religionTextField.inputView = religionPicker
+    religionPicker.backgroundColor = .white
+    
+    politicsPicker.delegate = self
+    politicalTextField.inputView = politicsPicker
+    politicsPicker.backgroundColor = .white
+    
+    drinkPicker.delegate = self
+    drinkingTextField.inputView = drinkPicker
+    drinkPicker.backgroundColor = .white
+    
+    smokingPicker.delegate = self
+    smokingTextField.inputView = smokingPicker
+    smokingPicker.backgroundColor = .white
+}
+
+// Toolbar for "done"
+func createToolbar() {
+    let toolBar = UIToolbar()
+    toolBar.sizeToFit()
+
+
+    let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(CreatProfile15ViewController.dismissKeyboard))
+
+    toolBar.setItems([doneButton], animated: false)
+    toolBar.isUserInteractionEnabled = true
+
+    // Makes toolbar apply to text fields
+    heightTextField.inputAccessoryView = toolBar
+    educationTextField.inputAccessoryView = toolBar
+    religionTextField.inputAccessoryView = toolBar
+    politicalTextField.inputAccessoryView = toolBar
+    drinkingTextField.inputAccessoryView = toolBar
+    smokingTextField.inputAccessoryView = toolBar
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+}
+
+// Picker Extension
+
+    extension CreatProfile15ViewController: UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    // Counting Picker View
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        switch pickerView {
+        case educationPicker: return education.count
+        case politicsPicker: return politics.count
+        case religionPicker: return religion.count
+        case drinkPicker: return drinking.count
+        case heightsPicker: return heights.count
+        case smokingPicker: return smoking.count
+        default: return 0
+        }
+    }
+    
+    // Rows
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch pickerView {
+        case educationPicker:
+            selectedEducation = education[row]
+            educationTextField.text = selectedEducation
+            return education[row]
+        case politicsPicker:
+            selectedPolitics = politics[row]
+            politicalTextField.text = selectedPolitics
+            return politics[row]
+        case drinkPicker:
+            selectedDrinking = drinking[row]
+            drinkingTextField.text = selectedDrinking
+            return drinking[row]
+        case heightsPicker:
+            selectedHeight = heights[row]
+            heightTextField.text = selectedHeight
+            return heights[row]
+        case smokingPicker:
+        selectedSmoking = smoking[row]
+        smokingTextField.text = selectedSmoking
+        return smoking[row]
+            
+        default: return ""
+        }
+    }
+    
+    // didSelect Function
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch pickerView {
+        case educationPicker:
+            selectedEducation = education[row]
+            educationTextField.text = selectedEducation
+        case politicsPicker:
+            selectedPolitics = politics[row]
+            politicalTextField.text = selectedPolitics
+        case drinkPicker:
+            selectedDrinking = drinking[row]
+            drinkingTextField.text = selectedDrinking
+        case heightsPicker:
+            selectedHeight = heights[row]
+            heightTextField.text = selectedHeight
+        case religionPicker:
+        selectedReligion = religion[row]
+        religionTextField.text = selectedReligion
+        case smokingPicker:
+        selectedSmoking = smoking[row]
+        smokingTextField.text = selectedSmoking
+        default: print("Nothing...")
+        }
+        if(pickerView == educationPicker) {
+            selectedEducation = education[row]
+            educationTextField.text = selectedEducation
+        } else if (pickerView == politicsPicker) {
+        }
+    
+    }
+
+}
+    
