@@ -24,7 +24,7 @@ class CreatProfile15ViewController: UIViewController {
     
     @IBOutlet weak var smokingTextField: UITextField!
     
-    let firebaseServer = FirebaseFunctions.shared
+ // let firebaseServer = FirebaseFunctions.shared
     
     let religion = ["Atheist",
     "Agnostic",
@@ -99,41 +99,41 @@ class CreatProfile15ViewController: UIViewController {
         let drinkInfo = UserInfo(type: "drink", value: Drink.valueFor(choice: drinking), visible: true)
         let smokingInfo = UserInfo(type: "smoking", value: Smoking.valueFor(choice: smoking), visible: true)
         
-        firebaseServer.saveCreateProfile15(heightInfo, educationInfo, politicsInfo, drinkInfo, smokingInfo) {[weak self] (error) in
-                
-                if error == nil {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let pageOne = storyboard.instantiateViewController(identifier: "CreateProfile15ViewController")
-                    self?.navigationController?.pushViewController(pageOne, animated: true)
-                }
-                print("Done but with error ...", error)
-            }
+//        firebaseServer.saveCreateProfile15(heightInfo, educationInfo, politicsInfo, drinkInfo, smokingInfo) {[weak self] (error) in
+//
+//                if error == nil {
+//                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                    let pageOne = storyboard.instantiateViewController(identifier: "CreateProfile15ViewController")
+//                    self?.navigationController?.pushViewController(pageOne, animated: true)
+//                }
+//                print("Done but with error ...", error)
+//            }
         }
     
     
 func CreateAllPickers() {
     
-    educationPicker.delegate = self
+    educationPicker.delegate = self as? UIPickerViewDelegate
     educationTextField.inputView = educationPicker
     educationPicker.backgroundColor = .white
     
-    heightsPicker.delegate = self
+    heightsPicker.delegate = self as? UIPickerViewDelegate
     heightTextField.inputView = heightsPicker
     heightsPicker.backgroundColor = .white
     
-    religionPicker.delegate = self
+    religionPicker.delegate = self as? UIPickerViewDelegate
     religionTextField.inputView = religionPicker
     religionPicker.backgroundColor = .white
     
-    politicsPicker.delegate = self
+    politicsPicker.delegate = self as? UIPickerViewDelegate
     politicalTextField.inputView = politicsPicker
     politicsPicker.backgroundColor = .white
     
-    drinkPicker.delegate = self
+    drinkPicker.delegate = self as? UIPickerViewDelegate
     drinkingTextField.inputView = drinkPicker
     drinkPicker.backgroundColor = .white
     
-    smokingPicker.delegate = self
+    smokingPicker.delegate = self as? UIPickerViewDelegate
     smokingTextField.inputView = smokingPicker
     smokingPicker.backgroundColor = .white
 }
@@ -247,4 +247,3 @@ func createToolbar() {
     }
 
 }
-    
