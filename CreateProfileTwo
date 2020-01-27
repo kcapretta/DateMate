@@ -1,0 +1,46 @@
+//
+//  CreateProfile2ViewController.swift
+//  RentAdate
+//
+//  Created by Kassandra Capretta on 12/19/19.
+//  Copyright © 2019 Kassandra Capretta. All rights reserved.
+//
+
+import UIKit
+
+class CreateProfile2ViewController: UIViewController {
+        
+
+        
+        @IBOutlet weak var lookingForDate: UIButton!
+        
+        @IBOutlet weak var wantsToBeDate: UIButton!
+        
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            Utilities.styleHollowButton(lookingForDate)
+            
+            Utilities.styleHollowButton(wantsToBeDate)
+            
+            
+        }
+        
+        @IBAction func profileOptionTapped(_ sender: UIButton) {
+            if let index = selectedOption.firstIndex(of: sender.tag) {
+                selectedOption.remove(at: index)
+                Utilities.styleHollowButton(sender)
+            } else {
+                selectedOption.append(sender.tag)
+                Utilities.styleFilledButton(sender)
+            }
+        }
+        
+        var selectedOption = UserInfo(type: "selectedOption", value: SelectedOption.both, visible: true)
+        if lookingFor.count == 1 {
+            lookingFor.value = selectedGender[0] == 0 ? .lookingForDate : .wantsToBeDate
+        }
+        
+        firebaseServer.saveCreateProfile1ViewController(profileOptionTapped)
+        
+    }
